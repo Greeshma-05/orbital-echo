@@ -21,7 +21,7 @@ float l=smoothstep(.15,.3,continents+n*.9);float detail=fbm(p*160.);vec3 ocean=m
 // Keep one local texture in memory across screen changes; failures retain procedural rendering.
 let cachedEarth: THREE.Texture | null = null;
 let loadingEarth: Promise<THREE.Texture> | null = null;
-function Globe({ motion }: { motion: boolean }) {
+export function Globe({ motion }: { motion: boolean }) {
   const [texture, setTexture] = useState<THREE.Texture | null>(cachedEarth);
   useEffect(() => {
     let alive = true;

@@ -1,102 +1,118 @@
 # ORBITAL ECHO
 
-**The Last Mission Beyond Earth** — a complete, local browser game about spacecraft engineering, scientific evidence, and bringing a crew home.
+A first-person 3D space game built with React, React Three Fiber, Three.js, TypeScript, and Vite. The application opens directly inside an astronaut preparation facility. Walk through the hangar, inspect the rocket, operate physical launch switches, and continue the expedition aboard Astra.
 
 ## Run
 
-Requires Node.js **22.12 or newer** and npm. Dependencies are already installed in this workspace.
+Requires Node.js 22.12+ and npm.
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173/**. Start a new mission, read or skip the briefing, and follow the chapter objectives. Use **10×** speed during ascent and crew tasks; separate stages when the flight director reports burnout.
-
-For a production build:
+Open **http://127.0.0.1:5173/**. No accounts, API keys, backend, or external runtime services are required. Earth imagery and other assets are served locally. WebGL is required for the playable world.
 
 ```sh
 npm run build
 npm run preview
 ```
 
-Vite prints the preview address, normally **http://127.0.0.1:4173/**. The generated `dist/` directory can also be served by any static web server. No API keys, accounts, backend, or runtime external service are required. Assets and fonts are local or system-provided.
+The production bundle is in `dist/`. Preview normally runs at **http://127.0.0.1:4173/**.
 
-## Playable campaign
+## Controls
 
-1. **The Countdown:** select engines, staging, boosters, propellant, payload, and instruments; resolve the vibration warning; pass preflight; manage countdown, abort, ascent, and manual stage separation.
-2. **The Silent Telescope:** plan a two-burn transfer, match Hubble’s orbit and velocity, approach, assign servicing, deploy Echo, and acquire a usable observation.
-3. **Signals in the Dark:** acquire and analyze three datasets with two targets and two filters; handle a power-bus event; obtain independent confirmation after restoring communications.
-4. **The Human Limit:** stabilize a failing cabin, allocate a spare part and an engineer to life support, and rest the exhausted astrophysicist.
-5. **Beyond the Known:** evaluate the hypotheses, optionally deploy a local relay probe, choose a conclusion, and return to Earth.
+| Input      | Action                                              |
+| ---------- | --------------------------------------------------- |
+| WASD       | Walk                                                |
+| Mouse      | Look; click the world to capture the pointer        |
+| E          | Use nearby equipment under the crosshair            |
+| Shift      | Sprint                                              |
+| Space      | Jump                                                |
+| Escape     | Release pointer capture and pause; close a terminal |
+| T          | Cycle 1×, 2×, 5×, and 10× simulation time           |
+| Arrow keys | Alternative keyboard look                           |
+| Drag       | Alternative look without pointer capture            |
 
-The three principal endings use actual evidence, crew health, oxygen, vehicle integrity, and telescope condition. An early return can preserve the crew with an unresolved mystery. Continuing through a damaging telescope power fault can yield substantial science at an equipment cost. Unresolved survival emergencies can also end in mission loss; the chapter checkpoint remains available.
+Touch screens have movement buttons, drag look, and an E interaction button. Pause opens preferences, the field handbook, mission log, reserves, saves, archives, and chapter recovery. Detailed operations open as contextual overlays over the 3D world.
 
-## Controls and systems
+## First launch
 
-- Sidebar navigation connects nine operational views; Settings is accessible from the sidebar and opening menu.
-- **Space:** pause/resume when focus is outside a form or button. **Esc:** close dialogs. **Tab:** keyboard navigation, with visible focus and dialog focus trapping.
-- Simulation speeds: **1× / 2× / 5× / 10×**. Time uses controlled steps of at most 0.5 simulated seconds. Pausing stops consumption, tasks, and acquisition. Menus and hidden browser tabs suspend time; there is no offline catch-up.
-- Launch calculations use SI units, staged mass reduction, the rocket equation, TWR, propellant flow, gravity, approximate drag, and a guided gravity turn. Bad configurations are rejected with explanations; missed staging and exhausted propellant can fail an ascent.
-- Circular-orbit velocity and period and two-impulse Hohmann transfer costs are calculated from Earth’s gravitational parameter. Maneuver fuel is represented as remaining **m/s of delta-v**, separately from launch propellant in **kg**. The return reserve is protected.
-- Science includes target/filter/exposure/duration selection, calibration, acquisition progress, deterministic scientific images, pan/zoom, image adjustments, metadata, spectra, line selection, control comparison, and evidence-weighted hypotheses.
-- Temporal photometry uses acquired, analyzed Echo samples. After at least eight samples spanning ten simulated minutes, a least-squares frequency scan estimates a candidate period. Sparse sampling and uncertain astrophysical interpretation are stated explicitly.
-- Three individual crew profiles track health, fatigue, stress, sleep debt, hydration, nutrition, radiation, suit condition, current task, and progress. Task completion changes real equipment and mission state.
-- Oxygen, CO₂, pressure, temperature, water, food, power, parts, budget, observation time, and maneuver reserves persist between chapters.
-- Deterministic events cover launch vibration, telescope power faults, cabin leaks/CO₂, exhaustion, EVA suit faults, communications blackouts, radiation, and low electrical reserves. Decisions spend resources and alter conditions.
-- Synthesized effects and ambient audio are optional, with volume control. Graphics quality, reduced motion, larger text, high contrast, and Science Mode change actual application behavior.
-- Three.js renders Earth, atmosphere, stars, orbital paths, and the spacecraft. A CSS 2D display preserves all operations when WebGL is unavailable. A procedural Earth remains available if the local texture fails to load.
+1. Approach the flight suit on the preparation room’s right wall, look at it, and press E.
+2. Approach the door ahead and press E. Walk through the corridor into the hangar.
+3. Use the inspection station near the rocket’s left side. Resolve the vibration warning, configure the vehicle, and complete preflight. Close the terminal and walk around the station.
+4. Enter the launch control room through the west hangar doorway. Use the left **ROLLOUT** switch. The bay doors open and Astra moves to the pad.
+5. Use the center **LAUNCH** switch to start the real-time countdown. Use it again to abort, or use **HOLD** to suspend/release the countdown. Look through the north window toward the pad to watch liftoff.
+6. Above 350 m, the viewpoint transfers to the spacecraft’s flight deck. Mission time changes to 5×. Approach the right console and press E at stage burnout to separate the spent stage. T changes the time rate.
+7. Once in orbit, the left navigation console starts chapter two. Transfer to Hubble at 540 km, match relative velocity, and approach.
 
-## Saving and recovery
+## Aboard Astra
 
-Progress autosaves every four seconds during a mission, at chapter transitions, on completion, and on page exit. Manual save, versioned JSON export/import, restart chapter, restart mission, and a persistent archive are implemented. Import validation checks shape, finite values, ranges, known events, observations, and matching checkpoint identity. Restored missions open paused.
+The flight deck connects through a corridor to a walkable habitat. The same mission simulation continues throughout the expedition.
 
-Preferences persist separately on the device and are included in exported saves. Restarting a chapter restores the entry checkpoint and retains prior-attempt log entries with a label. The mission archive retains completed, lost, and abandoned attempts.
+- **Navigation console, flight deck left:** transfers, velocity matching, Hubble approach, and the optional final-chapter relay probe.
+- **Flight console, flight deck right:** manual staging and live fuel, thrust, mass, altitude, velocity, pressure, and integrity.
+- **Hubble service rack, habitat right near the entrance:** assign the engineer to a timed repair using a spare part; recalibrate the pointing assembly after servicing.
+- **Optical workstation, habitat right:** deploy Echo, aim a reticle at the guide star, select target/filter/exposure, acquire observations, and analyze datasets. Pointing accuracy is averaged over the exposure and affects its scientific quality. Detailed images, spectra, image adjustments, comparisons, and light curves remain available within this terminal.
+- **Environmental rack, habitat left near the entrance:** inspect pressure, CO₂, oxygen, and controller condition; respond to the emergency and replace the failed controller.
+- **Bunk and crew station, habitat aft:** rest Maya and assign crew duties. Health, fatigue, stress, nutrition, hydration, radiation, suit condition, and task progress remain persistent.
+- **Evidence board, habitat left:** compare hypotheses, request independent confirmation, accept chapter debriefs, choose a conclusion, and return to Earth.
+
+The five chapters cover launch, Hubble servicing, scientific investigation, crew survival, and the final decision. Endings depend on collected evidence, interpretation, health, oxygen, vehicle integrity, and telescope condition. Early return and failed missions remain possible.
+
+## Movement and simulation
+
+World units are meters; the camera sits 1.68 m above the player’s feet. A vertical player body collides against room/equipment bounds. Movement uses substeps, normalized diagonal input, horizontal collision resolution, gravity, and floor/ceiling contact. The door and rocket collider positions follow their visible geometry. Walk speed is 2.8 m/s and sprint speed is 5.3 m/s. Time acceleration affects mission systems, not walking speed.
+
+Interactions require proximity, facing, and an unobstructed line of sight. Launch requires a flight suit, a verified vehicle, and completed rollout. The rendered rocket’s altitude follows the actual ascent simulation.
+
+The existing engineering model uses SI units, staged mass reduction, TWR, the rocket equation, fuel flow, gravity, drag, and a guided gravity turn. Orbital maneuvers use circular-orbit and two-impulse Hohmann calculations. Launch propellant is measured in kilograms; maneuver reserves are remaining m/s of delta-v. Resource consumption, crew tasks, acquisition, and emergencies advance in steps no larger than 0.5 simulated seconds.
+
+Pause freezes mission systems and movement. A countdown hold freezes mission time while allowing the player to walk to the release switch. Contextual workstations normally leave mission time running. Hidden browser tabs suspend mission time; there is no offline catch-up.
+
+## Saves and accessibility
+
+Mission state autosaves every four seconds and on chapter changes and exit. Player position, suit, door, and rollout state save separately every three seconds and on exit. Reload restores an active mission directly into its first-person world. Completed attempts remain in the archive, and the next load starts a new expedition. Portable JSON import/export preserves mission state and settings; imported missions pause until resumed through the pause menu. Player position is local to the device.
+
+Preferences include sound, ambient audio, volume, graphics quality, reduced decorative motion, larger text, high contrast, and optional science explanations. Keyboard look and drag look provide alternatives to pointer lock. Dialogs provide visible focus and keyboard navigation.
 
 Storage keys:
 
 - `orbital-echo-save-v1`
+- `orbital-echo-world-v1`
 - `orbital-echo-settings-v1`
 - `orbital-echo-archive-v1`
 
-Device storage can be cleared by browser privacy settings. Export a JSON copy for portable backup. If storage is unavailable, the game remains playable and offers export.
-
-## Tests
+## Verification
 
 ```sh
-npm test          # 20 core simulation and persistence tests
-npm run build    # TypeScript and production compilation
-npm run test:e2e  # Chrome browser tests; local dev server must be running
+npm test          # Simulation, persistence, player physics, and interaction tests
+npm run build    # TypeScript and production build
+npm run test:e2e  # Chrome; run the dev server first
 ```
 
-The browser configuration uses the installed **Google Chrome**. Tests cover a full five-chapter playthrough through the actual controls to **The Greatest Discovery**, archive and reload, launch abort, mobile navigation, reduced motion, larger text, pause, chapter recovery, invalid imports, mid-mission save restoration, settings, offline operations, and the WebGL-unavailable fallback. All four browser scenarios also passed against the packaged production build. To target a preview server, run `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4173 npm run test:e2e`. The full playthrough checks for blocking browser console errors. Screenshots are saved under `artifacts/`; failures retain Playwright traces under `test-results/`.
+Browser tests exercise the game through keyboard, mouse, touch controls, and contextual terminals. They do not teleport the player or inject mission progress. Coverage includes pointer lock, mouse look, pause, collision blocking, door interaction, inspection, rollout, countdown abort/hold, liftoff, onboard transition, staging, orbital operations, physical repair, telescope aiming, investigation, life support, crew rest, ending, saved position, chapter recovery, and a small touch viewport. Screenshots go to `artifacts/`; failures retain traces under `test-results/`. Set `PLAYWRIGHT_BASE_URL` to test a production preview server.
 
-Core tests cover rocket mass/TWR/delta-v, launch success, weak thrust and insufficient fuel, countdown abort/refund, dry-mass separation, orbit constants, maneuver costs and reserve rejection, paused time, fatigue/rest, observations/evidence, life-support repair, objective gates, three ending rules, save round-trip and rejection, event deduplication, blackout recovery, life-support decisions, optional probe reserves, photometric period fitting, launch retry, and malformed save fields.
+## Source layout
 
-## Source organization
+- `src/main.tsx` → `src/App.tsx` → `src/game/FirstPersonGame.tsx`: the actual application entry and first-person game.
+- `src/game/world.ts`: room bounds, collision objects, interactions, and local player saves.
+- `src/game/physics.ts`: player movement, gravity, collision, and interaction targeting.
+- `src/game/PlayerRig.tsx`: input, pointer lock, camera, and frame updates.
+- `src/game/WorldGeometry.tsx`: procedural facility, rocket, spacecraft, Earth, and stars.
+- `src/game/Terminals.tsx`: physical-console mission interfaces and telescope aiming.
+- `src/game/game.css`: minimal HUD, contextual terminals, pause menu, and touch controls.
+- `src/simulation/`: pure mission dynamics, progression, resources, science, and photometry.
+- `src/state/`: React integration, saves, checkpoints, and import validation.
+- `src/features/`: retained detailed science, crew, investigation, settings, and records.
+- `tests/`: unit and browser acceptance tests.
 
-- `src/simulation/`: pure typed physics, health/resource/time stepping, event effects, progression rules, and photometry.
-- `src/state/`: React state integration, autosave/checkpoints, settings, and validated persistence.
-- `src/features/`: menu/briefing/ending, overview, launch, navigation, telescope, crew/life support, investigation/resources/log.
-- `src/components/`: shared instruments, dialogs, Web Audio, the Three.js space scene, and brightness chart.
-- `src/data/`: chapters, fictional crew, targets, defaults, and event definitions.
-- `src/styles/`: responsive CSS design system and accessibility modes.
-- `tests/`: simulation unit tests and browser acceptance tests.
+## Model limits and imagery
 
-Code formatting uses Prettier. `npm exec prettier -- --write src tests` formats the implementation.
+This is a stylized procedural game. Player collision uses axis-aligned bounds rather than a general rigid-body solver. The ship uses the same grounded walking model as the facility. The ascent is a guided scalar-velocity approximation; transfers and final recovery resolve immediately. The camera handoff is a gameplay transition, and Earth’s backdrop is illustrative rather than drawn at orbital scale. Crew repairs are timed assignments initiated at physical hardware, not a free-flight EVA simulation.
 
-## Deliberate simulation limits
+Scientific images, spectra, light curves, crew, and the Echo anomaly are fictional. Evidence confidence is a gameplay heuristic, not a calibrated statistical probability. The relay probe travels to a local Earth orbit. The local NASA Blue Marble Earth texture is real imagery; clouds, spacecraft, and other geometry are procedural.
 
-This is an educational game, not a flight-certified solver or a clinical health model. Ascent uses a guided scalar-velocity approximation rather than six-degree-of-freedom dynamics. Orbital transfer burns and final recovery resolve immediately; the planet view is illustrative and does not claim orbital scale. Crew duties represent timed operations rather than a first-person EVA game. Resource and fatigue rates are compressed for a short campaign.
+The app works without external network access after loading, but a fresh reload needs the local/static web server; there is no service worker. Chrome is the browser used for acceptance testing.
 
-Astronomical images, spectra, light curves, hypothesis confidence, crew, and the Echo anomaly are fictional simulations. The period model is illustrative, and confidence scores are not calibrated statistical probabilities. The probe travels to a local Earth orbit for a separated observation baseline; it does not fly to a distant star.
-
-All essential controls work offline **after loading**. A fresh reload still requires the local/static web server; this version does not install a service worker. Desktop and mobile layouts were exercised in Chrome; other browser engines have not been verified. Audio is synthesized and subject to browser user-gesture restrictions.
-
-## Imagery credit
-
-The locally bundled Earth surface is a resized NASA Earth Observatory **Blue Marble: Next Generation** July base map. Clouds, lighting, spacecraft, and other visuals are procedural. NASA endorsement is not implied.
-
-- [NASA image source](https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-map/)
-- [NASA image and media usage guidance](https://www.nasa.gov/nasa-brand-center/images-and-media/)
-- Exact source URL and asset details: `public/assets/CREDITS.txt`.
+Earth imagery: [NASA Blue Marble: Next Generation](https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/base-map/). Exact source and credits are in `public/assets/CREDITS.txt`. NASA endorsement is not implied.

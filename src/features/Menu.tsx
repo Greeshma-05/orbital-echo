@@ -28,7 +28,9 @@ import {
   Stat,
   Tag,
 } from "../components/UI";
-export function SettingsContent() {
+export function SettingsContent({
+  onRestartChapter,
+}: { onRestartChapter?: () => void } = {}) {
   const {
     settings: s,
     updateSettings,
@@ -209,7 +211,7 @@ export function SettingsContent() {
           <button
             className="button primary compact"
             onClick={() => {
-              confirm === "chapter" ? restart() : start();
+              confirm === "chapter" ? (onRestartChapter ?? restart)() : start();
               setConfirm("");
             }}
           >

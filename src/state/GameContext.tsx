@@ -19,7 +19,8 @@ import {
   saveGame,
   saveSettings,
 } from "./persistence";
-const initialSave = loadSave();
+const storedSave = loadSave();
+const initialSave = storedSave?.mission.status === "active" ? storedSave : null;
 type Screen = "menu" | "intro" | "game";
 interface Game {
   mission: Mission;
@@ -42,10 +43,12 @@ interface Game {
 }
 const Context = createContext<Game>(null!);
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [mission, setMission] = useState(initialSave?.mission ?? newMission),
+  const [mission, setMission] = useState(() =>
+      initialSave ? { ...initialSave.mission, paused: false } : newMission(),
+    ),
     [checkpoint, setCheckpoint] = useState(initialSave?.checkpoint ?? mission),
     [settings, setSettings] = useState(loadSettings),
-    [screen, setScreen] = useState<Screen>("menu"),
+    [screen, setScreen] = useState<Screen>("game"),
     [view, setView] = useState<View>("Overview"),
     [toast, notify] = useState(""),
     [saved, setSaved] = useState(!!initialSave);
@@ -157,7 +160,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
     setMission(next);
     setCheckpoint(structuredClone(next));
     setView("Overview");
-    setScreen("intro");
+    setScreen("game");
     try {
       saveGame(next, next);
       setSaved(true);

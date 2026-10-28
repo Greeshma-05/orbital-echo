@@ -136,6 +136,8 @@ export interface Mission {
       exposure: number;
       duration: number;
       progress: number;
+      pointingSum?: number;
+      trackedTime?: number;
     } | null;
     observations: Observation[];
   };
@@ -181,6 +183,7 @@ export type Action =
     }
   | { type: "ANALYZE"; id: number }
   | { type: "CALIBRATE" }
+  | { type: "POINT"; accuracy: number }
   | { type: "CROSSCHECK" }
   | { type: "ASSIGN"; id: string; task: Task }
   | { type: "ADVANCE" }

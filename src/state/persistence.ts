@@ -177,7 +177,13 @@ export function validateMission(raw: unknown): Mission {
         s.telescope.active.exposure > 120 ||
         s.telescope.active.duration < s.telescope.active.exposure ||
         s.telescope.active.duration > 240 ||
-        s.telescope.active.progress < 0)) ||
+        s.telescope.active.progress < 0 ||
+        (s.telescope.active.pointingSum !== undefined &&
+          (!Number.isFinite(s.telescope.active.pointingSum) ||
+            s.telescope.active.pointingSum < 0)) ||
+        (s.telescope.active.trackedTime !== undefined &&
+          (!Number.isFinite(s.telescope.active.trackedTime) ||
+            s.telescope.active.trackedTime < 0)))) ||
     !s.telemetry.every((v) =>
       shape(v, { time: 0, altitude: 0, velocity: 0 }),
     ) ||

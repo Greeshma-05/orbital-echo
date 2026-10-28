@@ -24,7 +24,7 @@ import {
   Tag,
 } from "../components/UI";
 export function Investigation() {
-  const { mission: s, dispatch, setView } = useGame();
+  const { mission: s, dispatch } = useGame();
   const [confirm, setConfirm] = useState(false);
   const score = scienceScore(s);
   return (
@@ -137,13 +137,10 @@ export function Investigation() {
           </p>
           <div className="button-row">
             {s.chapter === 5 && (
-              <button
-                className="button secondary"
-                onClick={() => setView("Orbit & navigation")}
-              >
-                {s.probe ? "Review probe trajectory" : "Plan relay probe"}
-                <ArrowUpRight size={15} />
-              </button>
+              <p className="microcopy">
+                Plan the optional relay probe at the navigation console on the
+                flight deck, then return to this evidence board.
+              </p>
             )}
             <button
               className="button primary"

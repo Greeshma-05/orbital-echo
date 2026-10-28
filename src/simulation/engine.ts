@@ -271,13 +271,19 @@ export function step(s: Mission, dt: number) {
   resourceTick(s, dt);
   const obs = s.telescope.active;
   if (obs) {
+    const tracked = Math.min(dt, obs.duration - obs.progress);
+    obs.pointingSum =
+      (obs.pointingSum ?? s.telescope.pointing * obs.progress) +
+      s.telescope.pointing * tracked;
+    obs.trackedTime = (obs.trackedTime ?? obs.progress) + tracked;
     obs.progress += dt;
     s.telescope.condition = clamp(s.telescope.condition - dt * 0.0015);
     if (s.chapter >= 3 && obs.progress >= 8) trigger(s, "power");
     if (obs.progress >= obs.duration) {
+      const pointing = obs.pointingSum / Math.max(0.001, obs.trackedTime);
       const result = observationQuality(
         obs.exposure,
-        s.telescope.pointing,
+        pointing,
         s.telescope.condition,
         obs.filter,
         s.rocket.instrument,
@@ -292,7 +298,7 @@ export function step(s: Mission, dt: number) {
         ...result,
         time: s.elapsed,
         analyzed: false,
-        pointing: s.telescope.pointing,
+        pointing,
       });
       s.telescope.active = null;
       log(
@@ -606,6 +612,10 @@ export function reduceMission(input: Mission, a: Action): Mission {
         );
       }
       break;
+    case "POINT":
+      if (s.telescope.repaired && Number.isFinite(a.accuracy))
+        s.telescope.pointing = clamp(a.accuracy);
+      break;
     case "CALIBRATE":
       if (s.telescope.repaired && r.power >= 2) {
         r.power -= 2;
@@ -628,7 +638,12 @@ export function reduceMission(input: Mission, a: Action): Mission {
         a.duration >= a.exposure &&
         a.duration <= 240
       ) {
-        s.telescope.active = { ...a, progress: 0 };
+        s.telescope.active = {
+          ...a,
+          progress: 0,
+          pointingSum: 0,
+          trackedTime: 0,
+        };
         r.power -= 2;
         r.observationTime -= a.duration / 60;
         log(
